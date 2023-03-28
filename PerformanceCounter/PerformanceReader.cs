@@ -1,17 +1,12 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections;
-using System.Collections.Specialized;
 using System.Diagnostics;
-using System.Management;
-using System.Xml.Linq;
 
 namespace PerformanceReader
 {
     public class PerformanceReader
     {
-        private ManagementObjectSearcher m_cpuSearcher;
-        private ManagementObjectSearcher m_ramSearcher;
+        private PerformanceCounter m_cpuCounter;
+        private PerformanceCounter m_ramCounter;
 
         private Thread m_counterThread;
         private const int CountDelay = 1000;
@@ -26,8 +21,8 @@ namespace PerformanceReader
 
         public PerformanceReader()
         {
-            m_cpuSearcher = new ManagementObjectSearcher("select * from Win32_PerfFormattedData_PerfOS_Processor");
-            m_ramSearcher = new ManagementObjectSearcher("select * from Win32_OperatingSystem");
+            m_cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            m_ramCounter = new PerformanceCounter("Memory", "% Committed Bytes In Use");
             m_isRunning = false;
         }
 
@@ -39,26 +34,8 @@ namespace PerformanceReader
             m_isRunning = true;
 
             // Count cpu usage
-            int cpuCount = 0;
-            double totalPercent = 0;
-            foreach (ManagementObject obj in m_cpuSearcher.Get())
-            {
-                cpuCount++;
-                totalPercent += double.Parse((obj["PercentProcessorTime"]).ToString());
-            }
-
-            m_averageCpu = (totalPercent / cpuCount);
-
-            // Count ram usage
-            var memoryValues = m_ramSearcher.Get().Cast<ManagementObject>().Select(mo => new {
-                FreePhysicalMemory = Double.Parse(mo["FreePhysicalMemory"].ToString()),
-                TotalVisibleMemorySize = Double.Parse(mo["TotalVisibleMemorySize"].ToString())
-            }).FirstOrDefault();
-
-            if (memoryValues != null)
-            {
-                m_averageRam = ((memoryValues.TotalVisibleMemorySize - memoryValues.FreePhysicalMemory) / memoryValues.TotalVisibleMemorySize) * 100;
-            }
+            m_averageCpu = m_cpuCounter.NextValue();
+            m_averageRam = m_ramCounter.NextValue();
         }
 
         private void Counting()
@@ -70,30 +47,14 @@ namespace PerformanceReader
                 Console.Clear();
 
                 // Count cpu usage
-                int cpuCount = 0;
-                double totalPercent = 0;
-                foreach (ManagementObject obj in m_cpuSearcher.Get())
-                {
-                    cpuCount++;
-                    totalPercent += double.Parse((obj["PercentProcessorTime"]).ToString());
-                }
-
-                var resultCpu = (totalPercent / cpuCount);
+                var resultCpu = m_cpuCounter.NextValue();
                 Console.WriteLine("CPU : " + resultCpu.ToString("f2") + "%");
                 m_averageCpu = (m_averageCpu + resultCpu) / 2;
 
                 // Count ram usage
-                var memoryValues = m_ramSearcher.Get().Cast<ManagementObject>().Select(mo => new {
-                    FreePhysicalMemory = Double.Parse(mo["FreePhysicalMemory"].ToString()),
-                    TotalVisibleMemorySize = Double.Parse(mo["TotalVisibleMemorySize"].ToString())
-                }).FirstOrDefault();
-
-                if (memoryValues != null)
-                {
-                    var resultRam  = (((memoryValues.TotalVisibleMemorySize - memoryValues.FreePhysicalMemory) / memoryValues.TotalVisibleMemorySize) * 100);
-                    Console.WriteLine("RAM : " + resultRam.ToString("f2") + "%");
-                    m_averageRam = (m_averageRam + resultRam) / 2;
-                }
+                var resultRam = m_ramCounter.NextValue();
+                Console.WriteLine("RAM : " + resultRam.ToString("f2") + "%");
+                m_averageRam = (m_averageRam + resultRam) / 2;
             }
         }
 
