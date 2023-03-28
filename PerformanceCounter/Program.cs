@@ -8,6 +8,13 @@ namespace PerformanceReader // Note: actual namespace depends on the project nam
         {
             var alpha = new PerformanceReader();
             alpha.Start();
+
+            var closeThread = new Thread(() =>
+            {
+                Thread.Sleep(5000);
+                alpha.Stop();
+            });
+            closeThread.Start();
         }
     }
 }
