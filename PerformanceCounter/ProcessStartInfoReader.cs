@@ -36,16 +36,6 @@ namespace PerformanceReader
                 float cpuUsage = float.Parse(fields[2]);
 
                 Console.WriteLine("CPU Usage: {0}%", cpuUsage);
-
-
-                Console.WriteLine("Output : " + output);
-
-                int i = 0;
-                foreach (var field in fields)
-                {
-                    Console.WriteLine("Field CPU-" + i + " : " + field);
-                    i++;
-                }
             }
 
             m_startInfo.FileName = "sar";
@@ -62,18 +52,9 @@ namespace PerformanceReader
                 // extract the memory usage from the output
                 string[] lines = output.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 string[] fields = lines[3].Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-                float memUsage = float.Parse(fields[3]);
+                float memUsage = float.Parse(fields[4]);
 
                 Console.WriteLine("Memory Usage: {0}%", memUsage);
-
-                Console.WriteLine("Output : " + output);
-
-                int i = 0;
-                foreach (var field in fields)
-                {
-                    Console.WriteLine("Field Memory-" + i + " : " + field);
-                    i++;
-                }
             }
         }
 
