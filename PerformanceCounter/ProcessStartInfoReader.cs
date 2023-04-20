@@ -66,7 +66,7 @@ namespace PerformanceReader
                 int i = 0;
                 foreach (var field in fields)
                 {
-                    Console.WriteLine("Field Memory-{0}: {0}", i, float.Parse(field));
+                    Console.WriteLine("Field Memory-{0}: {0}", i, field);
                     i++;
                 }
             }
