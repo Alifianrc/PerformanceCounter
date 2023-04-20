@@ -6,7 +6,7 @@ namespace PerformanceReader // Note: actual namespace depends on the project nam
     {
         static void Main(string[] args)
         {
-            var alpha = new PerformanceReader();
+            var alpha = new ProcessStartInfoReader();
             alpha.Start();
 
             var closeThread = new Thread(() =>
