@@ -36,6 +36,13 @@ namespace PerformanceReader
                 float cpuUsage = float.Parse(fields[2]);
 
                 Console.WriteLine("CPU Usage: {0}%", cpuUsage);
+
+                int i = 0;
+                foreach (var field in fields)
+                {
+                    Console.WriteLine("Field Memory-{0}: {0}", i, float.Parse(field));
+                    i++;
+                }
             }
 
             m_startInfo.FileName = "sar";
@@ -59,7 +66,7 @@ namespace PerformanceReader
                 int i = 0;
                 foreach (var field in fields)
                 {
-                    Console.WriteLine("Field Memory-{0}: {0}%", i, field);
+                    Console.WriteLine("Field Memory-{0}: {0}", i, float.Parse(field));
                     i++;
                 }
             }
