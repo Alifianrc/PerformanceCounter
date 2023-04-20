@@ -55,6 +55,13 @@ namespace PerformanceReader
                 float memUsage = float.Parse(fields[3]);
 
                 Console.WriteLine("Memory Usage: {0}%", memUsage);
+
+                int i = 0;
+                foreach (var field in fields)
+                {
+                    Console.WriteLine("Field Memory-{0}: {0}%", i, field);
+                    i++;
+                }
             }
         }
 
