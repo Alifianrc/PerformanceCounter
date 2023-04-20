@@ -38,17 +38,12 @@ namespace PerformanceReader
                 Console.WriteLine("CPU Usage: {0}%", cpuUsage);
 
 
-                int i = 0;
-                foreach (var line in lines)
-                {
-                    Console.WriteLine("Line CPU-{0}: {0}", i, line);
-                    i++;
-                }
+                Console.WriteLine("Output : " + output);
 
-                i = 0;
+                int i = 0;
                 foreach (var field in fields)
                 {
-                    Console.WriteLine("Field CPU-{0}: {0}", i, field);
+                    Console.WriteLine("Field CPU-" + i + " : " + field);
                     i++;
                 }
             }
@@ -71,17 +66,12 @@ namespace PerformanceReader
 
                 Console.WriteLine("Memory Usage: {0}%", memUsage);
 
-                int i = 0;
-                foreach (var line in lines)
-                {
-                    Console.WriteLine("Line CPU-{0}: {0}", i, line);
-                    i++;
-                }
+                Console.WriteLine("Output : " + output);
 
-                i = 0;
+                int i = 0;
                 foreach (var field in fields)
                 {
-                    Console.WriteLine("Field Memory-{0}: {0}", i, float.Parse(field));
+                    Console.WriteLine("Field Memory-" + i + " : " + field);
                     i++;
                 }
             }
